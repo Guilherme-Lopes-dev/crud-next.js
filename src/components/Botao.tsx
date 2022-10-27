@@ -1,4 +1,3 @@
-
 interface BotaoProps {
     cor?: 'green' | 'blue' | 'gray'
     className?: string

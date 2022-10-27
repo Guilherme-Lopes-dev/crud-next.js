@@ -1,23 +1,22 @@
-import Layout from "../components/Layout"
-import Tabela from "../components/Tabela"
-import Cliente from "../core/Cliente"
-import Botao from "../components/Botao"
+import Botao from "../components/Botao";
+import Formulario from "../components/Formulario";
+import Layout from "../components/Layout";
+import Tabela from "../components/Tabela";
+
+import useClientes from "../hooks/useClientes";
+
 export default function Home() {
 
-  const clientes = [
-    new Cliente('Ana', 34, "1"),
-    new Cliente('Gui', 27, "2"),
-    new Cliente('Dine', 28, "3"),
-    new Cliente('Lipe', 29, "4")
-  ]
-
-  function clienteSelecionado(cliente: Cliente) {
-    console.log(cliente.nome)
-  }
-
-  function clienteExcluido(cliente: Cliente) {
-    console.log(`Excluir ... ${cliente.nome}`)
-  }
+  const {
+    cliente,
+    clientes,
+    novoCliente,
+    salvarCliente,
+    selecionarCliente,
+    excluirCliente,
+    tabelaVisivel,
+    exibirTabela
+  } = useClientes()
 
   return (
     <div className={`
@@ -25,16 +24,27 @@ export default function Home() {
       bg-gradient-to-r from-blue-500 to-purple-500
       text-white
     `}>
-      <Layout titulo="Cadastro">
-        <div className=" flex justify-end">
-        <Botao cor="green" className="mb-4" >
+      <Layout titulo="Cadastro Simples">
+        {tabelaVisivel ? (
+          <>
+            <div className="flex justify-end">
+              <Botao cor="green" className="mb-4"
+                onClick={novoCliente}>
                 Novo Cliente
-        </Botao>
-        </div>
-        <Tabela clientes={clientes}
-          clienteSelecionado={clienteSelecionado}
-          clienteExcluido={clienteExcluido} />
-
+              </Botao>
+            </div>
+            <Tabela clientes={clientes}
+              clienteSelecionado={selecionarCliente}
+              clienteExcluido={excluirCliente}
+            />
+          </>
+        ) : (
+          <Formulario
+            cliente={cliente}
+            clienteMudou={salvarCliente}
+            cancelado={exibirTabela}
+          />
+        )}
       </Layout>
     </div>
   )

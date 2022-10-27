@@ -1,19 +1,30 @@
-interface BotaoProps {
-    cor?: 'green' | 'blue' | 'gray'
-    className?: string
-    children: any
-    onClick?: () => void
+import Entrada from "./Entrada";
+import { useState } from 'react'
+import Cliente from '../core/Cliente'
+import Botao from "./Botao";
+interface FormularioProps {
+    cliente: Cliente
+    clienteMudou?:(cliente: Cliente) => void
+    cancelado?: () => void
 }
 
-export default function Botao(props: BotaoProps) {
-    const cor = props.cor ?? 'gray'
+
+export default function Formulario(props) {
+    const id = props.cliente?.id ?? null
+    const [nome, setNome] = useState(props.cliente?.nome ?? '')
+    const [idade, setIdade] = useState(props.cliente?.idade ?? 0)
+
     return (
-        <button onClick={props.onClick} className={`
-            bg-gradient-to-r from-${cor}-400 to-${cor}-700
-            text-white px-4 py-2 rounded-md 
-            ${props.className}
-        `}>
-            {props.children}
-        </button>
+        <div>
+            {id ? (<Entrada className="mb-4" somenteLeitura texto="Código" valor={id} />) : false}
+            <Entrada texto="Nome" valor={nome} valorMudou={setNome} className="mb-4"/>
+            <Entrada texto="Idade" tipo="number" valor={idade}   valorMudou={setIdade}/>
+            <div className="flex justify-end mt-3">
+                <Botao cor="blue" className="mr-2"
+                onClick={() => props.clienteMudou?.(new Cliente(nome, +idade, id))}>{id? 'Alterar' : 'Salvar'}</Botao>
+                <Botao onClick={props.cancelado}>Cancelar</Botao>
+
+            </div>
+        </div>
     )
 }
